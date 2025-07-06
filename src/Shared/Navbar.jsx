@@ -5,7 +5,7 @@ import Logo from './Logo';
 const Navbar = () => {
     const navlinks=<>
         <li><NavLink to="/">Home</NavLink></li>
-        <li><NavLink to="/about">About</NavLink></li>
+        <li><NavLink to="/coverage">Coverage</NavLink></li>
     </>
     return (
        <div className="navbar bg-base-100 shadow-sm">

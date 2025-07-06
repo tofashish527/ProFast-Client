@@ -10,6 +10,7 @@ import Register from "./Pages/Register";
 import ForgotPass from "./Pages/ForgotPass";
 import ResetPass from "./Pages/ResetPass";
 import EnCode from "./Pages/EnCode";
+import Coverage from "./Pages/Coverage";
 
 export const router = createBrowserRouter([
   {
@@ -18,14 +19,12 @@ export const router = createBrowserRouter([
     errorElement:<Error/>,
     children:[
         {
-            path:"/",
             index:true,
             Component:Home,
-            
         },
         {
-            path:"/",
-            Component:Home,
+            path:"/coverage",
+            Component:Coverage,
         }
     ]
   },
