@@ -11,6 +11,8 @@ import ForgotPass from "./Pages/ForgotPass";
 import ResetPass from "./Pages/ResetPass";
 import EnCode from "./Pages/EnCode";
 import Coverage from "./Pages/Coverage";
+import PrivateRoute from "./Context/PrivateRoute";
+import AddParcel from "./Pages/AddParcel";
 
 export const router = createBrowserRouter([
   {
@@ -25,6 +27,12 @@ export const router = createBrowserRouter([
         {
             path:"/coverage",
             Component:Coverage,
+             loader: () => fetch('./serviceCenter.json')
+        },
+        {
+            path:"/addparcel",
+            element:<PrivateRoute><AddParcel></AddParcel></PrivateRoute>,
+            loader: () => fetch('./serviceCenter.json')
         }
     ]
   },

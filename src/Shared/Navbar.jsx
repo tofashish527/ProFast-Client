@@ -1,10 +1,19 @@
 import React from 'react';
 import { NavLink } from 'react-router';
 import Logo from './Logo';
+import useAuth from '../hooks/useAuth';
 
 const Navbar = () => {
+  const {user,logout}=useAuth();
+   const handleLogOut = () => {
+    logout()
+      .then(() => console.log("Log Out Successfully!"))
+      .catch((error) => console.log(error));
+  };
+
     const navlinks=<>
         <li><NavLink to="/">Home</NavLink></li>
+        <li><NavLink to="/addparcel">Add Parcel</NavLink></li>
         <li><NavLink to="/coverage">Coverage</NavLink></li>
     </>
     return (
@@ -29,7 +38,32 @@ const Navbar = () => {
     </ul>
   </div>
   <div className="navbar-end">
-    <a className="btn">Button</a>
+          <div className="navbar-end flex gap-3">
+        {user ? (
+          <button
+            onClick={handleLogOut}
+            className="btn btn-outline btn-blue-600 hover:bg-lime-400 hover:text-black transition"
+          >
+            LogOut
+          </button>
+        ) : (
+          <>
+            <NavLink to='/register' className={({ isActive }) =>
+    isActive
+      ? "btn btn-outline bg-lime-400 text-black"
+      : "btn btn-outline  hover:bg-lime-400 hover:text-black"
+  }>
+              Register
+            </NavLink>
+            <NavLink to='/login' className={({ isActive }) =>
+    isActive
+      ? "btn btn-outline bg-lime-400 text-black"
+      : "btn btn-outline hover:bg-lime-400 hover:text-black"}>
+              Login
+            </NavLink>
+          </>
+        )}
+      </div>
   </div>
 </div>
     );
