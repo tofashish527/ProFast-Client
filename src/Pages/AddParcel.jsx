@@ -4,6 +4,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import useAuth from '../hooks/useAuth';
 import Swal from 'sweetalert2';
 import { useLoaderData } from 'react-router';
+import useAxiosSecure from '../hooks/useAxiosSecure';
 
 
 const generateTrackingID = () => {
@@ -23,6 +24,8 @@ const AddParcel = () => {
     } = useForm();
     const { user } = useAuth();
       const serviceCenters = useLoaderData();
+
+      const axiosAPI=useAxiosSecure()
 
          // Extract unique regions
     const uniqueRegions = [...new Set(serviceCenters.map((w) => w.region))];
@@ -105,6 +108,22 @@ const AddParcel = () => {
 
                 console.log("Ready for payment:", parcelData);
                 
+             //save data
+                        axiosAPI.post('/parcel',parcelData)
+               .then(res=>{
+                console.log(res.data);
+
+                 if (res.data.insertedId) {
+                            // TODO: redirect to a payment page 
+                            Swal.fire({
+                                title: "Redirecting...",
+                                text: "Proceeding to payment gateway.",
+                                icon: "success",
+                                timer: 1500,
+                                showConfirmButton: false,
+                            });
+                        }
+               })
                
                 
             }

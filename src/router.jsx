@@ -13,6 +13,9 @@ import EnCode from "./Pages/EnCode";
 import Coverage from "./Pages/Coverage";
 import PrivateRoute from "./Context/PrivateRoute";
 import AddParcel from "./Pages/AddParcel";
+import DashboardLayout from "./Layout/DashboardLayout";
+import MyParcels from "./Pages/Dashboard/MyParcels";
+import Payment from "./Pages/Dashboard/Payment";
 
 export const router = createBrowserRouter([
   {
@@ -61,6 +64,21 @@ export const router = createBrowserRouter([
             path:'Rpass',
             Component:ResetPass,
         }
+    ]
+  },
+  {
+     path :"/dashboard",
+    element:<PrivateRoute><DashboardLayout></DashboardLayout></PrivateRoute>,
+    children:
+    [
+      {
+        path:'myparcels',
+        Component:MyParcels,
+      },
+       {
+        path:'payment/:parcelId',
+        Component:Payment,
+      }
     ]
   }
 ]);
