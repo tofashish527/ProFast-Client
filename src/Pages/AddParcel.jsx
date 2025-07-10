@@ -1,11 +1,8 @@
-import React from 'react';
-import { useForm } from 'react-hook-form';
-import 'react-toastify/dist/ReactToastify.css';
-import useAuth from '../hooks/useAuth';
+import { useForm } from "react-hook-form";
 import Swal from 'sweetalert2';
-import { useLoaderData } from 'react-router';
-import useAxiosSecure from '../hooks/useAxiosSecure';
-
+import { useLoaderData } from "react-router";
+import useAuth from "../hooks/useAuth";
+import useAxiosSecure from "../hooks/useAxiosSecure";
 
 const generateTrackingID = () => {
     const date = new Date();
@@ -15,30 +12,27 @@ const generateTrackingID = () => {
 };
 
 const AddParcel = () => {
-
-        const {
+    const {
         register,
         handleSubmit,
         watch,
         formState: { errors },
     } = useForm();
     const { user } = useAuth();
-      const serviceCenters = useLoaderData();
+    const axiosSecure = useAxiosSecure();
 
-      const axiosAPI=useAxiosSecure()
-
-         // Extract unique regions
+    const serviceCenters = useLoaderData();
+    // Extract unique regions
     const uniqueRegions = [...new Set(serviceCenters.map((w) => w.region))];
     // Get districts by region
     const getDistrictsByRegion = (region) =>
         serviceCenters.filter((w) => w.region === region).map((w) => w.district);
 
-
     const parcelType = watch("type");
-     const senderRegion = watch("sender_region");
-     const receiverRegion = watch("receiver_region");
+    const senderRegion = watch("sender_region");
+    const receiverRegion = watch("receiver_region");
 
-      const onSubmit = (data) => {
+    const onSubmit = (data) => {
         const weight = parseFloat(data.weight) || 0;
         const isSameDistrict = data.sender_center === data.receiver_center;
 
@@ -108,12 +102,10 @@ const AddParcel = () => {
 
                 console.log("Ready for payment:", parcelData);
                 
-             //save data
-                        axiosAPI.post('/parcel',parcelData)
-               .then(res=>{
-                console.log(res.data);
-
-                 if (res.data.insertedId) {
+                axiosSecure.post('/parcels', parcelData)
+                    .then(res => {
+                        console.log(res.data);
+                        if (res.data.insertedId) {
                             // TODO: redirect to a payment page 
                             Swal.fire({
                                 title: "Redirecting...",
@@ -123,15 +115,14 @@ const AddParcel = () => {
                                 showConfirmButton: false,
                             });
                         }
-               })
-               
+                    })
                 
             }
         });
     };
 
-  return (
-     <div className="p-6 max-w-6xl mx-auto">
+    return (
+        <div className="p-6 max-w-6xl mx-auto">
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
                 {/* Heading */}
                 <div className="text-center">
@@ -185,7 +176,7 @@ const AddParcel = () => {
                             <label className="label">Weight (kg)</label>
                             <input
                                 type="number"
-                                step="any"
+                                step="0.1"
                                 {...register("weight")}
                                 disabled={parcelType !== "non-document"}
                                 className={`input input-bordered w-full ${parcelType !== "non-document" ? "bg-gray-100 cursor-not-allowed" : ""
@@ -210,14 +201,12 @@ const AddParcel = () => {
                                 {uniqueRegions.map((region) => (
                                     <option key={region} value={region}>{region}</option>
                                 ))}
-
                             </select>
                             <select {...register("sender_center", { required: true })} className="select select-bordered w-full">
                                 <option value="">Select Service Center</option>
                                 {getDistrictsByRegion(senderRegion).map((district) => (
                                     <option key={district} value={district}>{district}</option>
                                 ))}
-
                             </select>
                             <input {...register("sender_address", { required: true })} className="input input-bordered w-full" placeholder="Address" />
                             <textarea {...register("pickup_instruction", { required: true })} className="textarea textarea-bordered w-full" placeholder="Pickup Instruction" />
@@ -254,7 +243,7 @@ const AddParcel = () => {
                 </div>
             </form>
         </div>
-  );
+    );
 };
 
 export default AddParcel;

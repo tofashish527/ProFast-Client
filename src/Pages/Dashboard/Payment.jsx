@@ -3,9 +3,11 @@ import { loadStripe } from '@stripe/stripe-js';
 import React from 'react';
 import CheckoutForm from './CheckoutForm';
 
-const Payment = () => {
 
     const stripePromise = loadStripe(import.meta.env.VITE_PAYMENT_KEY);
+
+const Payment = () => {
+
     return (
         <div>
              <Elements stripe={stripePromise} >
