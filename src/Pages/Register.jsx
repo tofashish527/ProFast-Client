@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import icon from "../assets/img/image-upload-icon.png"
 import { NavLink } from 'react-router';
 import useAuth from '../hooks/useAuth';
 import SocialLogin from '../Component/SocialLogin';
+import axios from 'axios';
+import useAxios from '../hooks/useAxios';
 
 const Register = () => {
     const {
@@ -11,17 +13,55 @@ const Register = () => {
         handleSubmit,
          formState: { errors },
       } = useForm()
-      const {createuser}=useAuth()
+      const {createuser,updateProfileInfo}=useAuth()
+      const [profilepic,setProfilepic]=useState('');
+      const axiosInstance=useAxios();
+      const handleImageUpload=async(e)=>{
+      const image=e.target.files[0];
+      console.log(image);
+
+       const formData = new FormData();
+    formData.append('image', image);
+    
+    const imageURL=`https://api.imgbb.com/1/upload?key=${import.meta.env.VITE_Image_Upload_Key}`;
+       const res = await axios.post(imageURL,formData);
+       setProfilepic(res.data.data.url);
+
+  
+    } 
       const onSubmit = (data) => {
         console.log(data)
          createuser(data.email, data.password)
-        .then((result) => {
+        .then(async (result) => {
           console.log(result.user);
+          
+
+          const userInfo={
+             displayName:data.name,
+             role:"user", //
+             created_at: new Date().toISOString(),
+             last_log_in:new Date().toISOString()
+          }
+
+          const userRes= await axiosInstance.post('/users',userInfo)
+          console.log(userRes.data)
+          const userProfile={
+            displayName: data.name,
+            photoURL: profilepic,
+          }
+          updateProfileInfo(userProfile)
+          .then(() => {
+    console.log("Profile Updated")
+}).catch((error) => {
+  console.log(error.message)
+});
         })
         .catch((error) => {
           console.log(error.message);
         });
-    }
+
+      }
+      
     return (
         <div>
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -29,6 +69,10 @@ const Register = () => {
                 <h3 className='mt-2 text-lg'>Register With ProFast</h3>
                 <img src={icon} className='h-10 w-10 mt-5 mb-3'></img>
                <fieldset className="fieldset">
+
+          
+          <label className="label">Profile Pic</label>
+          <input type="file" onChange={handleImageUpload} placeholder="Choose Your File" />      
                 
           <label className="label">Name</label>
           <input type="text" {...register("name")} className="input" placeholder="Your Name" />
