@@ -21,6 +21,14 @@ import TrackParcel from "./Pages/Dashboard/TrackParcel";
 import BeARider from "./Pages/BeARider";
 import PendingRiders from "./Pages/Dashboard/PendingRiders";
 import ActiveRiders from "./Pages/Dashboard/ActiveRiders";
+import MakeAdmin from "./Pages/Dashboard/MakeAdmin";
+import Forbidden from "./Pages/Dashboard/Forbidden";
+import AdminRoute from "./Context/AdminRoute";
+import AssignRider from "./Pages/Dashboard/AssignRider";
+import PendingDeliveries from "./Pages/Dashboard/PendingDeliveries";
+import RiderRoute from "./Context/RiderRoute";
+import CompletedDeliveries from "./Pages/Dashboard/CompletedDeliveries";
+import MyEarnings from "./Pages/Dashboard/MyEarnings";
 
 export const router = createBrowserRouter([
   {
@@ -37,6 +45,10 @@ export const router = createBrowserRouter([
             Component:Coverage,
              loader: () => fetch('./serviceCenter.json')
         },
+        {
+        path: 'forbidden',
+        Component: Forbidden,
+      },
         {
             path:"/beArider",
             element:<PrivateRoute><BeARider></BeARider></PrivateRoute>,
@@ -93,18 +105,40 @@ export const router = createBrowserRouter([
         path: 'paymentHistory',
         Component: PaymentHistory
       },
-      {
+          {
+        path: 'assign-rider',
+        element: <AdminRoute><AssignRider></AssignRider></AdminRoute>
+      },
+          {
         path: 'pending-riders',
-        Component:PendingRiders,
+        element: <AdminRoute><PendingRiders></PendingRiders></AdminRoute>
       },
       {
         path: 'active-riders',
-        Component:ActiveRiders,
+        element: <AdminRoute><ActiveRiders></ActiveRiders></AdminRoute>
+      },
+      {
+        path: 'makeAdmin',
+        element: <AdminRoute><MakeAdmin></MakeAdmin></AdminRoute>
       },
       {
         path: 'track',
         Component:TrackParcel,
-      }
+      },
+       {
+        path: 'pending-deliveries',
+        element: <RiderRoute><PendingDeliveries></PendingDeliveries></RiderRoute>
+      },
+         {
+        path: 'completed-deliveries',
+        element: <RiderRoute>
+          <CompletedDeliveries></CompletedDeliveries>
+        </RiderRoute>
+      },
+      {
+        path: 'my-earnings',
+        element:<RiderRoute><MyEarnings></MyEarnings></RiderRoute>
+      },
     ]
   }
 ]);
